@@ -1,0 +1,7 @@
+.warning {
+  text-align: center;
+  padding: 10px;
+  color: white;
+  background-color: red;
+  border: solid 1px darkred;
+}
