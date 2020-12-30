@@ -13,5 +13,11 @@
         <li>Style the element (e.g. paragraph) holding your output text differently in both components</li>
       </ol>
     </div>
+    <hr>
+    <app-game-control (interval)="onNumberEmit($event)"></app-game-control>
+    <ng-container *ngFor="let num of numbers">
+      <app-even *ngIf="num % 2 === 0" [num]="num"></app-even>
+      <app-odd *ngIf="num % 2 !== 0" [num]="num"></app-odd>
+    </ng-container>
   </div>
 </div>
