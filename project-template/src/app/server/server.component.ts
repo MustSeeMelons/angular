@@ -3,13 +3,27 @@ import { Component } from "@angular/core";
 @Component({
   selector: "app-server",
   templateUrl: "./server.component.html",
+  styles: [
+    `
+      .online {
+        color: white;
+      }
+    `,
+  ],
 })
 export class ServerComponent {
-  rand = (Math.random() * 100).toFixed(0);
-
   id = 1;
   status = "offline";
+
+  constructor() {
+    this.status = Math.random() > 0.5 ? "Online" : "Offline";
+  }
+
   getName = () => {
-    return `Server: ${this.rand}`;
+    return this.status;
+  };
+
+  getColor = () => {
+    return this.status === "Online" ? "green" : "red";
   };
 }
