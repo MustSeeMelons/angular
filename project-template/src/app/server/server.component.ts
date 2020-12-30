@@ -4,4 +4,12 @@ import { Component } from "@angular/core";
   selector: "app-server",
   templateUrl: "./server.component.html",
 })
-export class ServerComponent {}
+export class ServerComponent {
+  rand = (Math.random() * 100).toFixed(0);
+
+  id = 1;
+  status = "offline";
+  getName = () => {
+    return `Server: ${this.rand}`;
+  };
+}
