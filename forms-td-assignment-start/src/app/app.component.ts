@@ -1,10 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from "@angular/core";
+import { NgForm } from "@angular/forms";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"],
 })
 export class AppComponent {
+  @ViewChild("f") form: NgForm;
+  data;
 
+  defSubscription = "advanced";
+
+  onSubmit = () => {
+    this.data = Object.keys(this.form.value).map((val) => {
+      return {
+        label: val,
+        value: this.form.value[val],
+      };
+    });
+
+    console.log(this.data);
+  };
 }

@@ -13,6 +13,64 @@
            Upon submitting the form, you should simply print the Value of the Form to the Console.
            Optionally, display it in your template.
       -->
+      <form (ngSubmit)="onSubmit()" #f="ngForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            class="form-control"
+            type="text"
+            id="email"
+            name="email"
+            ngModel
+            required
+            email
+            #emailInput="ngModel"
+          >
+        </div>
+        <span *ngIf="emailInput.invalid && emailInput.touched" class="help-block">Enter a valid email</span>
+        <div class="form-group">
+          <label for="subscription">Subscription</label>
+          <select 
+            class="form-control"
+            id="subscription"
+            name="subscription"
+            [ngModel]="defSubscription"
+          >
+            <option value="basic">Basic</option>
+            <option value="advanced">Advanced</option>
+            <option value="pro">Pro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            name="password"
+            type="password"
+            class="form-control"
+            id="password"
+            required
+            ngModel
+            #passwordInput="ngModel"
+          >
+        </div>
+        <span *ngIf="passwordInput.invalid && passwordInput.touched" class="help-block">Enter a password</span>
+        <span *ngIf="f.invalid && f.touched" class="help-block">This form is invalid mate.</span>
+        <button 
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="f.invalid"
+        >
+          Submit
+        </button>
+        <div class="row" *ngIf="data">
+          <div class="col-xs-12">
+              <h3>Your Data:</h3> 
+              <p class="row" *ngFor="let in of data">
+                {{in.label}} : {{in.value}}
+              </p>
+            </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
