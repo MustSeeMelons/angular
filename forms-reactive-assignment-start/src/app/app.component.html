@@ -14,6 +14,25 @@
 
           Upon submitting the form, simply print the value to the console
       -->
+      <form [formGroup]="appForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="projectName">Project Name</label>
+          <input type="text" id="projectName" class="form-control" formControlName="name">
+          <span class="help-block" *ngIf="nameControl.errors && nameControl.errors['badName']">Bad Name Sync</span>
+          <span class="help-block" *ngIf="nameControl.errors && nameControl.errors['badNameAsync']">Bad Name Async</span>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="text" id="email" class="form-control" formControlName="email">
+        </div>
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select id="status" class="form-control" formControlName="status">
+            <option [value]="s" *ngFor="let s of statuses">{{s}}</option>
+          </select>
+        </div>
+        <button class="btn btn-primary">Submit</button>
+      </form>
     </div>
   </div>
 </div>
