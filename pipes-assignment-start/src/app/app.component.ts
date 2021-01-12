@@ -54,7 +54,7 @@ export class AppComponent {
     this.servers.push({
       instanceType: "small",
       name: "New Server",
-      status: "stable",
+      status: Math.random() > 0.3 ? "stable" : "critical",
       started: new Date(15, 1, 2017),
     });
   }
