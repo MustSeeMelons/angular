@@ -11,23 +11,28 @@ export class RecipeService {
   constructor(private shoppingListService: ShoppingListService) {}
 
   private recipes: Recipe[] = [
-    new Recipe(
-      'Potato',
-      'Simple As Fuck',
-      'https://cdn.loveandlemons.com/wp-content/uploads/2020/01/baked-potato-500x500.jpg',
-      [new Ingredient('Apple', 1), new Ingredient('Jesus', 1)]
-    ),
-    new Recipe(
-      'Wet Potato',
-      'Simple As Fuck',
-      'https://cdn.loveandlemons.com/wp-content/uploads/2020/01/baked-potato-500x500.jpg',
-      [
-        new Ingredient('Apple', 1),
-        new Ingredient('Jesus', 1),
-        new Ingredient('Water', 1),
-      ]
-    ),
+    // new Recipe(
+    //   'Potato',
+    //   'Simple As Fuck',
+    //   'https://cdn.loveandlemons.com/wp-content/uploads/2020/01/baked-potato-500x500.jpg',
+    //   [new Ingredient('Apple', 1), new Ingredient('Jesus', 1)]
+    // ),
+    // new Recipe(
+    //   'Wet Potato',
+    //   'Simple As Fuck',
+    //   'https://cdn.loveandlemons.com/wp-content/uploads/2020/01/baked-potato-500x500.jpg',
+    //   [
+    //     new Ingredient('Apple', 1),
+    //     new Ingredient('Jesus', 1),
+    //     new Ingredient('Water', 1),
+    //   ]
+    // ),
   ];
+
+  setRecupes = (recipes: Recipe[]) => {
+    this.recipes = recipes;
+    this.recipesChanged.next(this.recipes.slice());
+  };
 
   getRecipes = () => {
     return this.recipes.slice();
