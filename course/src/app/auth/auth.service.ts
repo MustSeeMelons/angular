@@ -4,8 +4,9 @@ import {
   HttpParams,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { BehaviorSubject, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { User } from './user.model';
 
 export interface AuthRespnse {
   kind: string;
@@ -19,7 +20,38 @@ export interface AuthRespnse {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  user = new BehaviorSubject<User>(null);
+  timer;
   constructor(private http: HttpClient) {}
+
+  autoLogin = () => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    if (!userData) {
+      return;
+    }
+
+    const loaded = new User(
+      userData.email,
+      userData.id,
+      userData._token,
+      new Date(userData._tokenExpirationDate)
+    );
+
+    if (loaded.token) {
+      this.autoLogout(
+        new Date(userData._tokenExpirationDate).getTime() - new Date().getTime()
+      );
+
+      this.user.next(loaded);
+    }
+  };
+
+  autoLogout = (expirationDuration: number) => {
+    this.timer = setTimeout(() => {
+      this.logout();
+    }, expirationDuration);
+  };
 
   login = (email: string, password: string) => {
     return this.http
@@ -37,7 +69,17 @@ export class AuthService {
           ),
         }
       )
-      .pipe(catchError(this.handleError));
+      .pipe(
+        catchError(this.handleError),
+        tap((response) => {
+          this.handleAuthentication(
+            response.email,
+            response.idToken,
+            response.idToken,
+            +response.expiresIn
+          );
+        })
+      );
   };
 
   signUp = (email: string, password: string) => {
@@ -56,11 +98,51 @@ export class AuthService {
           ),
         }
       )
-      .pipe(catchError(this.handleError));
+      .pipe(
+        catchError(this.handleError),
+        tap((response) => {
+          this.handleAuthentication(
+            response.email,
+            response.idToken,
+            response.idToken,
+            +response.expiresIn
+          );
+        })
+      );
+  };
+
+  logout = () => {
+    this.user.next(null);
+    localStorage.clear();
+    this.timer && clearTimeout(this.timer);
+
+    this.timer = null;
+  };
+
+  private handleAuthentication = (
+    email: string,
+    userId: string,
+    token: string,
+    expiresIn: number
+  ) => {
+    const user = new User(
+      email,
+      userId,
+      token,
+      new Date(new Date().getTime() + expiresIn * 1000)
+    );
+
+    this.autoLogout(expiresIn * 1000);
+
+    this.user.next(user);
+
+    localStorage.setItem('userData', JSON.stringify(user));
   };
 
   private handleError = (err: HttpErrorResponse) => {
     let msg;
+
+    console.log(err);
 
     if (!err.error || !err.error.error) {
       return throwError('Something hit the fan.');
